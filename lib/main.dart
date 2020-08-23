@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:neumorphic_design_app/home_page.dart';
-import './main_page.dart';
 
 void main() {
   runApp(MyApp());

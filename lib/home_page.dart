@@ -9,13 +9,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<ScrollController> _scrollController = [
-    ScrollController(initialScrollOffset: 0.0),
-    ScrollController(initialScrollOffset: 0.0),
-    ScrollController(initialScrollOffset: 0.0),
-    ScrollController(initialScrollOffset: 0.0),
-    ScrollController(initialScrollOffset: 0.0),
+  List<ScrollController> _horizontalControllers = [
+    ScrollController(),
+    ScrollController(),
+    ScrollController(),
+    ScrollController(),
+    ScrollController(),
   ];
+
+  ScrollController _verticalController = ScrollController();
+
+  var _itemCountHorizontal = 5;
+
+  Orientation get isPortrait => MediaQuery.of(context).orientation;
 
   double get _height => MediaQuery.of(context).size.height;
   double get _width => MediaQuery.of(context).size.width;
@@ -39,8 +45,6 @@ class _HomePageState extends State<HomePage> {
     }
     return _padd;
   }
-
-  Orientation get isPortrait => MediaQuery.of(context).orientation;
 
   double get cardHeight {
     double cardH;
@@ -67,40 +71,127 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _scrollController.forEach((element) {
+    _horizontalControllers.forEach((element) {
       element.dispose();
     });
+    _verticalController.dispose();
     super.dispose();
+  }
+
+  void _onEndScrollVertical(ScrollMetrics metrics) {
+    print("scroll before = ${metrics.extentBefore}");
+    print("scroll after = ${metrics.extentAfter}");
+    print("scroll inside = ${metrics.extentInside}");
+    print("item HEIGHT => $cardHeight");
+
+    var halfOfTheHeight = cardHeight / 2;
+    var offsetOfItem = metrics.extentBefore % cardHeight;
+    if (offsetOfItem < halfOfTheHeight) {
+      final offset = metrics.extentBefore - offsetOfItem;
+      print("offsetOfItem1 = $offsetOfItem offset = $offset");
+      Future.delayed(Duration(milliseconds: 50), () {
+        _verticalController.animateTo(offset,
+            duration: Duration(milliseconds: 1000),
+            curve: Curves.fastOutSlowIn);
+      });
+    } else if (offsetOfItem > halfOfTheHeight) {
+      final offset = metrics.extentBefore + offsetOfItem;
+      print("offsetOfItem2 = $offsetOfItem offset = $offset");
+      Future.delayed(Duration(milliseconds: 50), () {
+        _verticalController.animateTo(offset,
+            duration: Duration(milliseconds: 1000),
+            curve: Curves.fastOutSlowIn);
+      });
+    }
+  }
+
+  void _onEndScrollHorizontal(ScrollMetrics metrics, int index) {
+    print("scroll before = ${metrics.extentBefore}");
+    print("scroll after = ${metrics.extentAfter}");
+    print("scroll inside = ${metrics.extentInside}");
+    print("item WIDTH => $cardWidth");
+
+    var halfOfTheWidth = _width / 2;
+    var offsetOfItem = metrics.extentBefore % _width;
+    if (offsetOfItem < halfOfTheWidth) {
+      final offset = metrics.extentBefore - offsetOfItem;
+      print("offsetOfItem1 = $offsetOfItem offset = $offset");
+      Future.delayed(Duration(milliseconds: 50), () {
+        _horizontalControllers[index].animateTo(offset,
+            duration: Duration(milliseconds: 1000),
+            curve: Curves.fastOutSlowIn);
+      });
+    } else if (offsetOfItem > halfOfTheWidth) {
+      final offset = metrics.extentBefore + offsetOfItem;
+      print("offsetOfItem2 = $offsetOfItem offset = $offset");
+      Future.delayed(Duration(milliseconds: 50), () {
+        _horizontalControllers[index].animateTo(offset,
+            duration: Duration(milliseconds: 1000),
+            curve: Curves.fastOutSlowIn);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ListView.builder(
-          itemCount: 5,
-          itemExtent: cardHeight,
-          primary: true,
-          itemBuilder: (BuildContext context, int index) {
-            return ListView.builder(
-              controller: _scrollController[index],
-              physics: ClampingScrollPhysics(),
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              itemBuilder: (BuildContext context, int index) => Padding(
-                padding: EdgeInsets.only(
-                  left: horizontalPadding,
-                  right: horizontalPadding,
-                  top: verticalPadding,
-                  bottom: verticalPadding,
-                ),
-                child: CardWidget(),
-              ),
-            );
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (scrollNotification) {
+            if (scrollNotification is ScrollEndNotification &&
+                scrollNotification.depth == 0) {
+              print('ScrollEndNotification ===> $scrollNotification');
+              _onEndScrollVertical(scrollNotification.metrics);
+            }
+            return null;
           },
+          child: buildListViewVertical(),
         ),
       ),
+    );
+  }
+
+  Widget buildListViewVertical() {
+    return ListView.builder(
+      itemCount: _itemCountHorizontal,
+      itemExtent: cardHeight,
+      controller: _verticalController,
+      itemBuilder: (BuildContext context, int index) {
+        return NotificationListener<ScrollNotification>(
+            onNotification: (scrollNotification) {
+              if (scrollNotification is ScrollEndNotification &&
+                  scrollNotification.depth == 0) {
+                print('ScrollEndNotification ===> $scrollNotification');
+                _onEndScrollHorizontal(scrollNotification.metrics, index);
+              }
+              return null;
+            },
+            child: buildListViewHorizontal(index));
+      },
+    );
+  }
+
+  Widget buildListViewHorizontal(int index) {
+    return ListView.builder(
+      controller: _horizontalControllers[index],
+      physics: ClampingScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      itemCount: _itemCountHorizontal + 1,
+      itemBuilder: (BuildContext context, int index) =>
+          index < _itemCountHorizontal
+              ? Padding(
+                  padding: EdgeInsets.only(
+                    left: horizontalPadding,
+                    right: horizontalPadding,
+                    top: verticalPadding,
+                    bottom: verticalPadding,
+                  ),
+                  child: CardWidget(),
+                )
+              : SizedBox(
+                  width: 50,
+                ),
     );
   }
 }
