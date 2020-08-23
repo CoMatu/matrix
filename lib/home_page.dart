@@ -9,15 +9,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<ScrollController> _horizontalControllers = [
-    ScrollController(),
-    ScrollController(),
-    ScrollController(),
-    ScrollController(),
-    ScrollController(),
-  ];
+  List<ScrollController> _horizontalControllers;
 
-  ScrollController _verticalController = ScrollController();
+  ScrollController _verticalController;
 
   var _itemCountHorizontal = 5;
 
@@ -66,6 +60,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _horizontalControllers = [
+      ScrollController(),
+      ScrollController(),
+      ScrollController(),
+      ScrollController(),
+      ScrollController(),
+    ];
+    _verticalController = ScrollController();
     super.initState();
   }
 
@@ -82,8 +84,20 @@ class _HomePageState extends State<HomePage> {
     print("scroll before = ${metrics.extentBefore}");
     print("scroll after = ${metrics.extentAfter}");
     print("scroll inside = ${metrics.extentInside}");
+    print("index = ${metrics.axisDirection}");
     print("item HEIGHT => $cardHeight");
+    final topPadd = MediaQuery.of(context).padding.top;
+    print('TOPPPPPPPPPP $topPadd');
 
+    int point = metrics.extentAfter ~/ (_height - topPadd);
+
+    var offset = (_height - topPadd) * point;
+    Future.delayed(Duration(milliseconds: 100), () {
+      _verticalController.animateTo(offset,
+          duration: Duration(milliseconds: 1000), curve: Curves.fastOutSlowIn);
+    });
+
+/* 
     var halfOfTheHeight = cardHeight / 2;
     var offsetOfItem = metrics.extentBefore % cardHeight;
     if (offsetOfItem < halfOfTheHeight) {
@@ -102,7 +116,7 @@ class _HomePageState extends State<HomePage> {
             duration: Duration(milliseconds: 1000),
             curve: Curves.fastOutSlowIn);
       });
-    }
+    } */
   }
 
   void _onEndScrollHorizontal(ScrollMetrics metrics, int index) {
@@ -116,18 +130,16 @@ class _HomePageState extends State<HomePage> {
     if (offsetOfItem < halfOfTheWidth) {
       final offset = metrics.extentBefore - offsetOfItem;
       print("offsetOfItem1 = $offsetOfItem offset = $offset");
-      Future.delayed(Duration(milliseconds: 50), () {
+      Future.delayed(Duration(milliseconds: 10), () {
         _horizontalControllers[index].animateTo(offset,
-            duration: Duration(milliseconds: 1000),
-            curve: Curves.fastOutSlowIn);
+            duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
       });
     } else if (offsetOfItem > halfOfTheWidth) {
       final offset = metrics.extentBefore + offsetOfItem;
       print("offsetOfItem2 = $offsetOfItem offset = $offset");
-      Future.delayed(Duration(milliseconds: 50), () {
+      Future.delayed(Duration(milliseconds: 10), () {
         _horizontalControllers[index].animateTo(offset,
-            duration: Duration(milliseconds: 1000),
-            curve: Curves.fastOutSlowIn);
+            duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
       });
     }
   }

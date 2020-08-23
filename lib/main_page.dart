@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'dart:math';
 
 import 'package:neumorphic_design_app/card_widget.dart';
