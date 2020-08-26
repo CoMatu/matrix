@@ -23,46 +23,27 @@ class _HomePage2State extends State<HomePage2> {
   double get horizontalPadding {
     double _padd;
     if (isPortrait == Orientation.portrait) {
-      _padd = (_width - cardWidth) / 4;
+      _padd = (_width - cardWidth) / 1.8;
     } else {
       _padd = _width * 0.01;
     }
     return _padd;
   }
 
-  double get verticalPadding {
-    double _padd;
-    if (isPortrait == Orientation.portrait) {
-      _padd = (_height - cardHeight) / 2;
-    } else {
-      _padd = (_height - cardHeight) / 2;
-    }
-    return _padd;
-  }
-
-  double get cardHeight {
-    double cardH;
-    if (isPortrait == Orientation.portrait) {
-      cardH = cardWidth * 1.7;
-    } else {
-      cardH = _height * 0.9;
-    }
-    return cardH;
-  }
+  double get verticalPadding => _height * 0.95;
 
   double get cardWidth {
-    var cardW = _width * 0.99;
+    var cardW = _width * 0.9;
     if (cardW > _height / 1.7) {
       cardW = _height / 1.77;
     }
     return cardW;
   }
 
-  get getPageWidth => _width;
-
   @override
   void initState() {
-    _verticalController = PageController(viewportFraction: 0.9);
+    _verticalController =
+        PageController(viewportFraction: 0.85, initialPage: 1);
     _controllers = [];
     for (int i = 0; i < _itemCount; i++) {
       final controller = PageController(viewportFraction: 0.9);
@@ -87,7 +68,11 @@ class _HomePage2State extends State<HomePage2> {
                     itemCount: _itemCount,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.only(
+                            left: horizontalPadding,
+                            right: horizontalPadding,
+                            top: 5,
+                            bottom: 5),
                         child: CardWidget(),
                       );
                     },
