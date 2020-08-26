@@ -29,7 +29,7 @@ class CardWidget extends StatelessWidget {
                         left: 45.0, right: 15.0, top: 15.0),
                     child: Center(
                       child: AutoSizeText(
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+                          ' ВЕРСИЯ 2: Lorem ipsum dolor sit amet, consectetur adipiscing elit',
                           style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey[50],
