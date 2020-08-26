@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:neumorphic_design_app/card_widget.dart';
 
 class HomePage2 extends StatefulWidget {
@@ -12,6 +13,7 @@ class _HomePage2State extends State<HomePage2> {
   var _itemCount = 10;
 
   List<PageController> _controllers;
+  PageController _verticalController;
 
   Orientation get isPortrait => MediaQuery.of(context).orientation;
 
@@ -21,7 +23,7 @@ class _HomePage2State extends State<HomePage2> {
   double get horizontalPadding {
     double _padd;
     if (isPortrait == Orientation.portrait) {
-      _padd = (_width - cardWidth) / 2;
+      _padd = (_width - cardWidth) / 4;
     } else {
       _padd = _width * 0.01;
     }
@@ -60,6 +62,12 @@ class _HomePage2State extends State<HomePage2> {
 
   @override
   void initState() {
+    _verticalController = PageController(viewportFraction: 0.9);
+    _controllers = [];
+    for (int i = 0; i < _itemCount; i++) {
+      final controller = PageController(viewportFraction: 0.9);
+      _controllers.add(controller);
+    }
     super.initState();
   }
 
@@ -67,39 +75,33 @@ class _HomePage2State extends State<HomePage2> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Center(
-        child: Container(
-          height: _height,
-          width: isPortrait == Orientation.portrait ? _width : getPageWidth,
-          child: PageView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: _itemCount,
-            itemBuilder: (BuildContext context, int index) => isPortrait ==
-                    Orientation.portrait
+      child: PageView.builder(
+        scrollDirection: Axis.vertical,
+        controller:
+            isPortrait == Orientation.portrait ? _verticalController : null,
+        itemCount: _itemCount,
+        itemBuilder: (BuildContext context, int index) =>
+            isPortrait == Orientation.portrait
                 ? PageView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: _itemCount,
                     itemBuilder: (context, index) {
-                      return CardWidget();
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CardWidget(),
+                      );
                     },
                   )
                 : ListView.builder(
-                    physics: ClampingScrollPhysics(),
+                    physics: PageScrollPhysics(),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: _itemCount + 1,
+                    itemCount: _itemCount,
                     itemBuilder: (BuildContext context, int index) => Padding(
-                      padding: EdgeInsets.only(
-                        left: horizontalPadding,
-                        right: horizontalPadding,
-                        top: verticalPadding,
-                        bottom: verticalPadding,
-                      ),
+                      padding: const EdgeInsets.all(8.0),
                       child: CardWidget(),
                     ),
                   ),
-          ),
-        ),
       ),
     ));
   }
