@@ -66,30 +66,38 @@ class _HomePage2State extends State<HomePage2> {
       itemCount: _itemCount,
       itemBuilder: (BuildContext context, int index) =>
           isPortrait == Orientation.portrait
-              ? PageView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _itemCount,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          left: horizontalPadding,
-                          right: horizontalPadding,
-                          top: 5,
-                          bottom: 5),
-                      child: CardWidget(),
-                    );
-                  },
-                )
-              : ListView.builder(
-                  physics: PageScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _itemCount,
-                  itemBuilder: (BuildContext context, int index) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CardWidget(),
-                  ),
-                ),
+              ? buildHorizontalPageView()
+              : buildHorizontalListView(),
+    );
+  }
+
+  ListView buildHorizontalListView() {
+    return ListView.builder(
+      physics: PageScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      itemCount: _itemCount,
+      itemBuilder: (BuildContext context, int index) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CardWidget(),
+      ),
+    );
+  }
+
+  PageView buildHorizontalPageView() {
+    return PageView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: _itemCount,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.only(
+              left: horizontalPadding,
+              right: horizontalPadding,
+              top: 5,
+              bottom: 5),
+          child: CardWidget(),
+        );
+      },
     );
   }
 }
