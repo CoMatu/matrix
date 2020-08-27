@@ -41,53 +41,55 @@ class _HomePage2State extends State<HomePage2> {
   }
 
   @override
-  void initState() {
+  void didChangeDependencies() {
+    final _h = MediaQuery.of(context).size.height;
+    final _w = MediaQuery.of(context).size.width;
+    final _ratio = _w / _h;
+    print(_w / _h);
+    final _fraction = _ratio > 0.6 ? 0.85 : 0.7;
     _verticalController =
-        PageController(viewportFraction: 0.85, initialPage: 1);
+        PageController(viewportFraction: _fraction, initialPage: 1);
     _controllers = [];
     for (int i = 0; i < _itemCount; i++) {
       final controller = PageController(viewportFraction: 0.9);
       _controllers.add(controller);
     }
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: PageView.builder(
-        scrollDirection: Axis.vertical,
-        controller:
-            isPortrait == Orientation.portrait ? _verticalController : null,
-        itemCount: _itemCount,
-        itemBuilder: (BuildContext context, int index) =>
-            isPortrait == Orientation.portrait
-                ? PageView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _itemCount,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                            left: horizontalPadding,
-                            right: horizontalPadding,
-                            top: 5,
-                            bottom: 5),
-                        child: CardWidget(),
-                      );
-                    },
-                  )
-                : ListView.builder(
-                    physics: PageScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _itemCount,
-                    itemBuilder: (BuildContext context, int index) => Padding(
-                      padding: const EdgeInsets.all(8.0),
+    return PageView.builder(
+      scrollDirection: Axis.vertical,
+      controller:
+          isPortrait == Orientation.portrait ? _verticalController : null,
+      itemCount: _itemCount,
+      itemBuilder: (BuildContext context, int index) =>
+          isPortrait == Orientation.portrait
+              ? PageView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _itemCount,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          left: horizontalPadding,
+                          right: horizontalPadding,
+                          top: 5,
+                          bottom: 5),
                       child: CardWidget(),
-                    ),
+                    );
+                  },
+                )
+              : ListView.builder(
+                  physics: PageScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _itemCount,
+                  itemBuilder: (BuildContext context, int index) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CardWidget(),
                   ),
-      ),
-    ));
+                ),
+    );
   }
 }
