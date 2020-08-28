@@ -59,15 +59,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      scrollDirection: Axis.vertical,
-      controller:
-          isPortrait == Orientation.portrait ? _verticalController : null,
-      itemCount: _itemCount,
-      itemBuilder: (BuildContext context, int index) =>
-          isPortrait == Orientation.portrait
-              ? buildHorizontalPageView()
-              : buildHorizontalListView(),
+    return SafeArea(
+      child: Container(
+        color: Colors.white,
+        child: PageView.builder(
+          scrollDirection: Axis.vertical,
+          controller:
+              isPortrait == Orientation.portrait ? _verticalController : null,
+          itemCount: _itemCount,
+          itemBuilder: (BuildContext context, int index) =>
+              isPortrait == Orientation.portrait
+                  ? buildHorizontalPageView()
+                  : buildHorizontalListView(),
+        ),
+      ),
     );
   }
 

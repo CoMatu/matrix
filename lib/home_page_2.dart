@@ -1,27 +1,33 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:neumorphic_design_app/card_widget.dart';
 
 class HomePage2 extends StatefulWidget {
-  const HomePage2({Key key}) : super(key: key);
+  final int dimension;
+  const HomePage2(this.dimension, {Key key}) : super(key: key);
 
   @override
   _HomePage2State createState() => _HomePage2State();
 }
 
 class _HomePage2State extends State<HomePage2> {
-  final _itemCount = 10; // количество вью
-  final int _dimension = 3; // размерность сетки
+  final _itemCount = 12; // количество вью
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth < 500) {
-          return buildVerticalLayout();
-        }
-        return buildHorizontalLayout();
-      },
+    return Container(
+      color: Colors.white,
+      child: SafeArea(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth < 500) {
+              return buildVerticalLayout();
+            }
+            return buildHorizontalLayout();
+          },
+        ),
+      ),
     );
   }
 
@@ -76,12 +82,12 @@ class _HomePage2State extends State<HomePage2> {
   Widget buildGrid(BuildContext context, double ratio) {
     return Center(
       child: GridView.count(
-        crossAxisCount: _dimension,
+        crossAxisCount: widget.dimension,
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         childAspectRatio: ratio,
         children: List.generate(
-          _dimension * _dimension,
+          widget.dimension * widget.dimension,
           (index) => CardWidget(),
         ),
       ),
