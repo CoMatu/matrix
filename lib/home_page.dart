@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:neumorphic_design_app/card_widget.dart';
-import 'package:neumorphic_design_app/custom_scroll_physics.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -10,11 +10,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<ScrollController> _horizontalControllers;
+  var _itemCount = 10;
 
-  ScrollController _verticalController;
-
-  int _itemCountHorizontal = 5;
+  List<PageController> _controllers;
+  PageController _verticalController;
 
   Orientation get isPortrait => MediaQuery.of(context).orientation;
 
@@ -24,32 +23,14 @@ class _HomePageState extends State<HomePage> {
   double get horizontalPadding {
     double _padd;
     if (isPortrait == Orientation.portrait) {
-      _padd = (_width - cardWidth) / 2;
+      _padd = (_width - cardWidth) / 1.8;
     } else {
       _padd = _width * 0.01;
     }
     return _padd;
   }
 
-  double get verticalPadding {
-    double _padd;
-    if (isPortrait == Orientation.portrait) {
-      _padd = cardHeight * 0.005;
-    } else {
-      _padd = (_height - cardHeight) / 2;
-    }
-    return _padd;
-  }
-
-  double get cardHeight {
-    double cardH;
-    if (isPortrait == Orientation.portrait) {
-      cardH = cardWidth * 1.7;
-    } else {
-      cardH = _height * 0.9;
-    }
-    return cardH;
-  }
+  double get verticalPadding => _height * 0.95;
 
   double get cardWidth {
     var cardW = _width * 0.9;
@@ -59,81 +40,64 @@ class _HomePageState extends State<HomePage> {
     return cardW;
   }
 
-  ScrollPhysics _physics;
-  List<int> pages;
-
   @override
-  void initState() {
-    _horizontalControllers = [];
-    for (int i = 0; i < _itemCountHorizontal; i++) {
-      final _controller = ScrollController();
-      _horizontalControllers.add(_controller);
+  void didChangeDependencies() {
+    final _h = MediaQuery.of(context).size.height;
+    final _w = MediaQuery.of(context).size.width;
+    final _ratio = _w / _h;
+    print(_w / _h);
+    final _fraction = _ratio > 0.6 ? 0.85 : 0.7;
+    _verticalController =
+        PageController(viewportFraction: _fraction, initialPage: 1);
+    _controllers = [];
+    for (int i = 0; i < _itemCount; i++) {
+      final controller = PageController(viewportFraction: 0.9);
+      _controllers.add(controller);
     }
-    pages = List.generate(_itemCountHorizontal, (index) => index);
-    _verticalController = ScrollController();
-    _verticalController.addListener(() {
-      if (_verticalController.position.haveDimensions && _physics == null) {
-        setState(() {
-          var dimension =
-              _verticalController.position.maxScrollExtent / (pages.length - 1);
-          _physics = CustomScrollPhysics(itemDimension: dimension);
-        });
-      }
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _horizontalControllers.forEach((element) {
-      element.dispose();
-    });
-    _verticalController.dispose();
-    super.dispose();
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: buildListViewVertical(),
-      ),
+    return PageView.builder(
+      scrollDirection: Axis.vertical,
+      controller:
+          isPortrait == Orientation.portrait ? _verticalController : null,
+      itemCount: _itemCount,
+      itemBuilder: (BuildContext context, int index) =>
+          isPortrait == Orientation.portrait
+              ? buildHorizontalPageView()
+              : buildHorizontalListView(),
     );
   }
 
-  Widget buildListViewVertical() {
-    return ListView.builder(
-      itemCount: _itemCountHorizontal,
-      physics: _physics,
-      itemExtent: cardHeight,
-      itemBuilder: (BuildContext context, int index) {
-        return buildListViewHorizontal(index);
-      },
-    );
-  }
-
-  Widget buildListViewHorizontal(int index) {
+  ListView buildHorizontalListView() {
     return ListView.builder(
       physics: PageScrollPhysics(),
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
-      itemCount: _itemCountHorizontal,
+      itemCount: _itemCount,
       itemBuilder: (BuildContext context, int index) => Padding(
-        padding: EdgeInsets.only(
-          left: horizontalPadding,
-          right: horizontalPadding,
-          top: verticalPadding,
-          bottom: verticalPadding,
-        ),
+        padding: const EdgeInsets.all(8.0),
         child: CardWidget(),
       ),
     );
   }
-}
 
-class CardDimensions {
-  final double cardHeight;
-  final double cardWidth;
-
-  CardDimensions(this.cardHeight, this.cardWidth);
+  PageView buildHorizontalPageView() {
+    return PageView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: _itemCount,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.only(
+              left: horizontalPadding,
+              right: horizontalPadding,
+              top: 5,
+              bottom: 5),
+          child: CardWidget(),
+        );
+      },
+    );
+  }
 }

@@ -8,14 +8,16 @@ class CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Center(
       child: AspectRatio(
         aspectRatio: 1 / 1.7,
         child: Card(
           semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(45.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.all(Radius.circular(radiusCard(context))),
           ),
           color: Colors.grey[50],
 //        elevation: 10,
@@ -25,8 +27,8 @@ class CardWidget extends StatelessWidget {
                 children: <Widget>[
                   Image.asset('assets/third.jpg', fit: BoxFit.cover),
                   Padding(
-                    padding: const EdgeInsets.only(
-                        left: 45.0, right: 15.0, top: 15.0),
+                    padding: EdgeInsets.only(
+                        left: size.width * 0.01, right: 15.0, top: 15.0),
                     child: Center(
                       child: AutoSizeText(
                           ' ${DateTime.now().toString()}: Lorem ipsum dolor sit amet, consectetur adipiscing elit',
@@ -59,50 +61,13 @@ class CardWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-/* Card(
-      semanticContainer: true,
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(45.0)),
-      ),
-      color: Colors.grey[50],
-      elevation: 10,
-      child: Column(
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Image.asset('assets/third.jpg', fit: BoxFit.fill),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 45.0, right: 15.0, top: 15.0),
-                child: Center(
-                  child: AutoSizeText(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[50],
-                          fontFamily: 'Roboto2'),
-                      minFontSize: 10,
-                      maxLines: 6,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(18.0),
-              child: AutoSizeText(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce semper augue ac massa egestas, non luctus purus cursus',
-                style: TextStyle(fontSize: 22),
-                minFontSize: 20,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-        ],
-      ),
-    ) */
+  double radiusCard(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation;
+    if (isPortrait == Orientation.portrait) {
+      return MediaQuery.of(context).size.width * 0.07;
+    } else {
+      return MediaQuery.of(context).size.height * 0.05;
+    }
+  }
+}
