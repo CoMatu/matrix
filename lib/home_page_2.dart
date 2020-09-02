@@ -34,6 +34,7 @@ class _HomePage2State extends State<HomePage2> {
   Widget buildVerticalLayout() {
     return PageView.builder(
       scrollDirection: Axis.vertical,
+      controller: PageController(viewportFraction: 1),
       itemCount: _itemCount,
       itemBuilder: (BuildContext context, int index) {
         return buildPageViewHorizontal(context);
