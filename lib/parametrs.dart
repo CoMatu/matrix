@@ -21,16 +21,22 @@ class Parameters {
 }
 
 class CardParameters {
-  final double cardWidth;
-  final double cardHeight;
-  final double cardPadding;
+  double cardWidth;
+  double cardHeight;
+  double cardPadding;
+  double viewportFraction;
 
-  CardParameters(
-      {@required this.cardWidth,
-      @required this.cardHeight,
-      @required this.cardPadding});
+  CardParameters({
+    @required this.cardWidth,
+    @required this.cardHeight,
+    @required this.cardPadding,
+    @required this.viewportFraction,
+  });
 
   @override
-  String toString() =>
-      'CardParameters(cardWidth: $cardWidth, cardHeight: $cardHeight, cardPadding: $cardPadding)';
+  String toString() {
+    return 'CardParameters(cardWidth: ' +
+        '$cardWidth, cardHeight: $cardHeight,' +
+        ' cardPadding: $cardPadding, viewportFraction: $viewportFraction)';
+  }
 }
