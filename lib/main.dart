@@ -62,6 +62,8 @@ class StartPage extends StatelessWidget {
   void pressButton(BuildContext context, int dimension) {
     Provider.of<SizeProvider>(context, listen: false)
         .setCardSize(MediaQuery.of(context).size, dimension);
+    Provider.of<SizeProvider>(context, listen: false)
+        .setCardSizeHorizontal(MediaQuery.of(context).size, dimension);
     Navigator.push(
         context,
         MaterialPageRoute(
