@@ -25,14 +25,11 @@ class _HomePage2State extends State<HomePage2> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SafeArea(
+    return SafeArea(
+      child: Container(
+        color: Colors.white,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            sizeProvider.setCardSize(
-                MediaQuery.of(context).size, widget.dimension);
-
             if (constraints.maxWidth < 500) {
               return buildVerticalLayout();
             }
@@ -47,7 +44,8 @@ class _HomePage2State extends State<HomePage2> {
     return PageView.builder(
       scrollDirection: Axis.vertical,
       controller: PageController(
-          viewportFraction: sizeProvider.parameters.viewportFraction),
+          viewportFraction: sizeProvider.parameters.viewportFraction,
+          initialPage: sizeProvider.parameters.initialPage),
       itemCount: _itemCount,
       itemBuilder: (BuildContext context, int index) {
         return buildPageViewHorizontal(context);
@@ -63,9 +61,8 @@ class _HomePage2State extends State<HomePage2> {
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
           /*24 is for notification bar on Android*/
-          double ratio = sizeProvider.parameters.cardWidth /
-              sizeProvider.parameters.cardHeight;
-          return Center(child: buildGrid(context, ratio));
+          double ratio = 0.588;
+          return buildGridNew(widget.dimension);
         },
       ),
     );
@@ -89,15 +86,36 @@ class _HomePage2State extends State<HomePage2> {
   }
 
   Widget buildGrid(BuildContext context, double ratio) {
-    return Center(
-      child: GridView.count(
-        crossAxisCount: widget.dimension,
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        childAspectRatio: ratio,
-        children: List.generate(
-          widget.dimension * widget.dimension,
-          (index) => CardWidget(),
+    return GridView.count(
+      crossAxisCount: widget.dimension,
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      controller: ScrollController(keepScrollOffset: false),
+      childAspectRatio: ratio,
+      children: List.generate(
+        widget.dimension * widget.dimension,
+        (index) => CardWidget(),
+      ),
+    );
+  }
+
+  Widget buildGridNew(int dimension) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(
+        widget.dimension,
+        (index) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: List.generate(
+            widget.dimension,
+            (index) => Container(
+                height: sizeProvider.parameters.cardHeight,
+                width: sizeProvider.parameters.cardWidth,
+                child: Padding(
+                  padding: EdgeInsets.all(sizeProvider.parameters.cardPadding),
+                  child: CardWidget(),
+                )),
+          ),
         ),
       ),
     );

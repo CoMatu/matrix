@@ -30,27 +30,29 @@ class StartPage extends StatelessWidget {
     int dimension = 1;
 
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration:
-                      InputDecoration(hintText: 'Введите размерность сетки'),
-                  onChanged: (value) {
-                    dimension = int.parse(value);
-                  },
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    decoration:
+                        InputDecoration(hintText: 'Введите размерность сетки'),
+                    onChanged: (value) {
+                      dimension = int.parse(value);
+                    },
+                  ),
                 ),
-              ),
-              RaisedButton(
-                onPressed: () => pressButton(context, dimension),
-                child: Text('OK'),
-              )
-            ],
+                RaisedButton(
+                  onPressed: () => pressButton(context, dimension),
+                  child: Text('OK'),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -65,6 +67,8 @@ class StartPage extends StatelessWidget {
             builder: (context) => HomePage(),
           ));
     } else {
+      Provider.of<SizeProvider>(context, listen: false)
+          .setCardSize(MediaQuery.of(context).size, dimension);
       Navigator.push(
           context,
           MaterialPageRoute(
