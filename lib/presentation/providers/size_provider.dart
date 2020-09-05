@@ -36,9 +36,11 @@ class SizeProvider extends ChangeNotifier {
       } else {
         _parameters.viewportFraction =
             (_parameters.cardWidth * dimension) / size.width;
+        _parameters.initialPage = 1;
       }
     }
     _parameters.cardPadding = _parameters.cardHeight * 0.03;
+
     print(parameters);
     notifyListeners();
   }

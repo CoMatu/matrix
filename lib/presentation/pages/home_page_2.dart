@@ -54,17 +54,12 @@ class _HomePage2State extends State<HomePage2> {
   }
 
   Widget buildPageViewHorizontal(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: PageView.builder(
-        itemCount: _itemCount,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int index) {
-          /*24 is for notification bar on Android*/
-          double ratio = 0.588;
-          return buildGridNew(widget.dimension);
-        },
-      ),
+    return PageView.builder(
+      itemCount: _itemCount,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (BuildContext context, int index) {
+        return buildGridNew(widget.dimension);
+      },
     );
   }
 
@@ -78,7 +73,7 @@ class _HomePage2State extends State<HomePage2> {
           itemCount: _itemCount,
           scrollDirection: Axis.horizontal,
           itemBuilder: (BuildContext context, int index) {
-            return buildGrid(context, 0.75);
+            return Center(child: buildGrid(context, 0.75));
           },
         );
       },
@@ -94,7 +89,10 @@ class _HomePage2State extends State<HomePage2> {
       childAspectRatio: ratio,
       children: List.generate(
         widget.dimension * widget.dimension,
-        (index) => CardWidget(),
+        (index) => Padding(
+          padding: EdgeInsets.all(sizeProvider.parameters.cardPadding),
+          child: CardWidget(),
+        ),
       ),
     );
   }
@@ -109,7 +107,8 @@ class _HomePage2State extends State<HomePage2> {
           children: List.generate(
             widget.dimension,
             (index) => Container(
-                height: sizeProvider.parameters.cardHeight,
+                height: sizeProvider.parameters.cardHeight -
+                    sizeProvider.parameters.cardPadding,
                 width: sizeProvider.parameters.cardWidth,
                 child: Padding(
                   padding: EdgeInsets.all(sizeProvider.parameters.cardPadding),

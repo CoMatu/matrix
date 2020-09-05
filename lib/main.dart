@@ -60,20 +60,12 @@ class StartPage extends StatelessWidget {
   }
 
   void pressButton(BuildContext context, int dimension) {
-    if (dimension == 1) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ));
-    } else {
-      Provider.of<SizeProvider>(context, listen: false)
-          .setCardSize(MediaQuery.of(context).size, dimension);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage2(dimension),
-          ));
-    }
+    Provider.of<SizeProvider>(context, listen: false)
+        .setCardSize(MediaQuery.of(context).size, dimension);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage2(dimension),
+        ));
   }
 }
