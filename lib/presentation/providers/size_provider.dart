@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:neumorphic_design_app/parametrs.dart';
+import 'package:neumorphic_design_app/data/parametrs.dart';
 
 class SizeProvider extends ChangeNotifier {
   var _parameters = CardParameters(
@@ -8,7 +8,7 @@ class SizeProvider extends ChangeNotifier {
   CardParameters get parameters => _parameters;
 
   void setCardSize(Size size, int dimension) {
-    double koefVisibility = 0.94;
+    double koefVisibility = 1;
     double cardRatio = 1.7;
     double statusBarHeight = 24;
 

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:neumorphic_design_app/card_widget.dart';
+import 'package:neumorphic_design_app/presentation/providers/size_provider.dart';
+import 'package:neumorphic_design_app/presentation/widgets/card_widget.dart';
+import 'package:provider/provider.dart';
 
 class HomePage2 extends StatefulWidget {
   final int dimension;
@@ -13,6 +15,13 @@ class HomePage2 extends StatefulWidget {
 
 class _HomePage2State extends State<HomePage2> {
   final _itemCount = 12; // количество вью
+  SizeProvider sizeProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    sizeProvider = Provider.of<SizeProvider>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +30,9 @@ class _HomePage2State extends State<HomePage2> {
       child: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
+            sizeProvider.setCardSize(
+                MediaQuery.of(context).size, widget.dimension);
+
             if (constraints.maxWidth < 500) {
               return buildVerticalLayout();
             }
@@ -34,7 +46,8 @@ class _HomePage2State extends State<HomePage2> {
   Widget buildVerticalLayout() {
     return PageView.builder(
       scrollDirection: Axis.vertical,
-      controller: PageController(viewportFraction: 1),
+      controller: PageController(
+          viewportFraction: sizeProvider.parameters.viewportFraction),
       itemCount: _itemCount,
       itemBuilder: (BuildContext context, int index) {
         return buildPageViewHorizontal(context);
@@ -43,22 +56,17 @@ class _HomePage2State extends State<HomePage2> {
   }
 
   Widget buildPageViewHorizontal(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        child: PageView.builder(
-          itemCount: _itemCount,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (BuildContext context, int index) {
-            var size = MediaQuery.of(context).size;
-            /*24 is for notification bar on Android*/
-            final double itemHeight = (size.height - 24) / 2.1;
-            final double itemWidth = size.width / 2;
-            double ratio = itemWidth / itemHeight;
-            return Center(child: buildGrid(context, ratio));
-          },
-        ),
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: PageView.builder(
+        itemCount: _itemCount,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) {
+          /*24 is for notification bar on Android*/
+          double ratio = sizeProvider.parameters.cardWidth /
+              sizeProvider.parameters.cardHeight;
+          return Center(child: buildGrid(context, ratio));
+        },
       ),
     );
   }

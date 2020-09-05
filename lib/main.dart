@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:neumorphic_design_app/home_page.dart';
-import 'package:neumorphic_design_app/home_page_2.dart';
+import 'package:neumorphic_design_app/presentation/pages/home_page.dart';
+import 'package:neumorphic_design_app/presentation/pages/home_page_2.dart';
+import 'package:neumorphic_design_app/presentation/providers/size_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => SizeProvider(),
+      )
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

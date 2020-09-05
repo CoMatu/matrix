@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:neumorphic_design_app/card_widget.dart';
+import 'package:neumorphic_design_app/presentation/widgets/card_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
