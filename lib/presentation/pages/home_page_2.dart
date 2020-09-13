@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:neumorphic_design_app/data/parametrs.dart';
+import 'package:neumorphic_design_app/presentation/custom_scroll.dart';
 import 'package:neumorphic_design_app/presentation/providers/size_provider.dart';
 import 'package:neumorphic_design_app/presentation/widgets/card_widget.dart';
 import 'package:provider/provider.dart';
@@ -18,10 +19,18 @@ class _HomePage2State extends State<HomePage2> {
   final _itemCount = 12; // количество вью
   SizeProvider sizeProvider;
 
+  SyncScrollController _syncScroller;
+  List<PageController> _pagesControllers;
+
   @override
   void initState() {
     super.initState();
+    _pagesControllers = [];
     sizeProvider = Provider.of<SizeProvider>(context, listen: false);
+    for (int i = 0; i < _itemCount; i++) {
+      _pagesControllers.add(PageController());
+    }
+    _syncScroller = SyncScrollController(_pagesControllers);
   }
 
   @override
@@ -49,19 +58,25 @@ class _HomePage2State extends State<HomePage2> {
           initialPage: parameters.initialPage),
       itemCount: _itemCount,
       itemBuilder: (BuildContext context, int index) {
-        return buildPageViewHorizontal(context, parameters);
+        return buildPageViewHorizontal(context, parameters, index);
       },
     );
   }
 
   Widget buildPageViewHorizontal(
-      BuildContext context, CardParameters parameters) {
-    return PageView.builder(
-      itemCount: _itemCount,
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (BuildContext context, int index) {
-        return buildGridNew(widget.dimension, parameters);
+      BuildContext context, CardParameters parameters, int index) {
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollInfo) {
+        _syncScroller.processNotification(scrollInfo, _pagesControllers[index]);
       },
+      child: PageView.builder(
+        controller: _pagesControllers[index],
+        itemCount: _itemCount,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) {
+          return buildGridNew(widget.dimension, parameters);
+        },
+      ),
     );
   }
 

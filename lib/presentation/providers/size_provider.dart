@@ -23,7 +23,7 @@ class SizeProvider extends ChangeNotifier {
   CardParameters get parameters => _parameters;
   CardParameters get paramHorizontal => _parameters2;
 
-  void setCardSize(Size size, int dimension) {
+  void setCardSize(Size size, int dimension, double paddings) {
     double koefVisibility = 0.94;
 
     _parameters.cardWidth = (size.width * koefVisibility) / dimension;
@@ -48,13 +48,12 @@ class SizeProvider extends ChangeNotifier {
         _parameters.initialPage = 1;
       }
     }
-    _parameters.cardPadding = _parameters.cardHeight * 0.03;
-
+    _parameters.cardPadding = _parameters.cardHeight * paddings;
     print(parameters);
     notifyListeners();
   }
 
-  void setCardSizeHorizontal(Size size, int dimension) {
+  void setCardSizeHorizontal(Size size, int dimension, double paddings) {
     double _height = size.width - statusBarHeight;
     double _width = size.height; // потому что развернули в горизонталь
     double cardHeight = _height / dimension;
@@ -65,5 +64,6 @@ class SizeProvider extends ChangeNotifier {
     _parameters2.cardWidth = cardWidth;
     _parameters2.viewportFraction = viewportF;
     _parameters2.initialPage = 1;
+    _parameters.cardPadding = _parameters.cardHeight * paddings;
   }
 }

@@ -28,42 +28,66 @@ class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int dimension = 1;
+    double paddings = 0.03;
 
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration:
-                        InputDecoration(hintText: 'Введите размерность сетки'),
-                    onChanged: (value) {
-                      dimension = int.parse(value);
-                    },
-                  ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            hintText: 'Введите размерность сетки'),
+                        onChanged: (value) {
+                          dimension = int.parse(value);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                RaisedButton(
-                  onPressed: () => pressButton(context, dimension),
-                  child: Text('OK'),
-                )
-              ],
-            ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                            hintText: 'Отступы от 0.01 до 0.15'),
+                        onChanged: (value) {
+                          paddings = double.parse(value);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              RaisedButton(
+                onPressed: () => pressButton(context, dimension, paddings),
+                child: Text('OK'),
+              )
+            ],
           ),
         ),
       ),
     );
   }
 
-  void pressButton(BuildContext context, int dimension) {
+  void pressButton(BuildContext context, int dimension, double paddings) {
     Provider.of<SizeProvider>(context, listen: false)
-        .setCardSize(MediaQuery.of(context).size, dimension);
-    Provider.of<SizeProvider>(context, listen: false)
-        .setCardSizeHorizontal(MediaQuery.of(context).size, dimension);
+        .setCardSize(MediaQuery.of(context).size, dimension, paddings);
+    Provider.of<SizeProvider>(context, listen: false).setCardSizeHorizontal(
+        MediaQuery.of(context).size, dimension, paddings);
     Navigator.push(
         context,
         MaterialPageRoute(

@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   auto_size_text: ^2.1.0  
+  linked_scroll_controller: ^0.1.2
 
   # UI
   neumorphic: ^0.3.2
