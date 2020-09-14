@@ -90,7 +90,7 @@ class _HomePage2State extends State<HomePage2> {
           children: List.generate(
             widget.dimension,
             (index) => Container(
-                height: parameters.cardHeight - parameters.cardPadding,
+                height: parameters.cardHeight - (parameters.cardPadding * 2),
                 width: parameters.cardWidth,
                 child: Padding(
                   padding: EdgeInsets.all(parameters.cardPadding),

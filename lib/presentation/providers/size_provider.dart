@@ -27,6 +27,7 @@ class SizeProvider extends ChangeNotifier {
     double koefVisibility = 0.94;
 
     _parameters.cardWidth = (size.width * koefVisibility) / dimension;
+    _parameters.cardPadding = _parameters.cardWidth * 1.7 * paddings;
     _parameters.cardHeight = _parameters.cardWidth * cardRatio;
 
     if (_parameters.cardHeight * dimension < size.height * koefVisibility) {
@@ -48,7 +49,6 @@ class SizeProvider extends ChangeNotifier {
         _parameters.initialPage = 1;
       }
     }
-    _parameters.cardPadding = _parameters.cardHeight * paddings;
     print(parameters);
     notifyListeners();
   }
