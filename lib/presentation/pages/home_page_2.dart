@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 
 class HomePage2 extends StatefulWidget {
   final int dimension;
-  const HomePage2(this.dimension, {Key key}) : super(key: key);
+  final bool isLine;
+  const HomePage2(this.dimension, this.isLine, {Key key}) : super(key: key);
 
   @override
   _HomePage2State createState() => _HomePage2State();
@@ -40,7 +41,9 @@ class _HomePage2State extends State<HomePage2> {
         color: Colors.white,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            if (constraints.maxWidth < 500) {
+            if (widget.isLine) {
+              return buildLineLayout(sizeProvider.parameters);
+            } else if (constraints.maxWidth < 500) {
               return buildLayout(sizeProvider.parameters);
             }
             return buildLayout(sizeProvider.paramHorizontal);
@@ -68,6 +71,7 @@ class _HomePage2State extends State<HomePage2> {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
         _syncScroller.processNotification(scrollInfo, _pagesControllers[index]);
+        return true;
       },
       child: PageView.builder(
         controller: _pagesControllers[index],
@@ -90,15 +94,33 @@ class _HomePage2State extends State<HomePage2> {
           children: List.generate(
             widget.dimension,
             (index) => Container(
-                height: parameters.cardHeight - (parameters.cardPadding * 2),
-                width: parameters.cardWidth,
-                child: Padding(
-                  padding: EdgeInsets.all(parameters.cardPadding),
-                  child: CardWidget(),
-                )),
+              height: parameters.cardHeight - (parameters.cardPadding * 2),
+              width: parameters.cardWidth,
+              child: Padding(
+                padding: EdgeInsets.all(parameters.cardPadding),
+                child: CardWidget(),
+              ),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildLineLayout(CardParameters parameters) {
+    return ListView.builder(
+      itemCount: _itemCount,
+      physics: PageScrollPhysics(),
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          height: parameters.cardHeight - (parameters.cardPadding * 2),
+          width: parameters.cardWidth,
+          child: Padding(
+            padding: EdgeInsets.all(parameters.cardPadding),
+            child: CardWidget(),
+          ),
+        );
+      },
     );
   }
 }

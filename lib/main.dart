@@ -22,20 +22,35 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class StartPage extends StatelessWidget {
+class StartPage extends StatefulWidget {
   const StartPage({Key key}) : super(key: key);
+
+  @override
+  _StartPageState createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
+  bool isLine = false;
 
   @override
   Widget build(BuildContext context) {
     int dimension = 1;
     double paddings = 0.03;
-
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SwitchListTile(
+                value: isLine,
+                onChanged: (bool newValue) {
+                  setState(() {
+                    isLine = newValue;
+                  });
+                },
+                title: Text('Листать одну строку'),
+              ),
               Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Row(
@@ -73,7 +88,8 @@ class StartPage extends StatelessWidget {
                 ),
               ),
               RaisedButton(
-                onPressed: () => pressButton(context, dimension, paddings),
+                onPressed: () =>
+                    pressButton(context, dimension, paddings, isLine),
                 child: Text('OK'),
               )
             ],
@@ -83,7 +99,8 @@ class StartPage extends StatelessWidget {
     );
   }
 
-  void pressButton(BuildContext context, int dimension, double paddings) {
+  void pressButton(
+      BuildContext context, int dimension, double paddings, bool isLine) {
     Provider.of<SizeProvider>(context, listen: false)
         .setCardSize(MediaQuery.of(context).size, dimension, paddings);
     Provider.of<SizeProvider>(context, listen: false).setCardSizeHorizontal(
@@ -91,7 +108,7 @@ class StartPage extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage2(dimension),
+          builder: (context) => HomePage2(dimension, isLine),
         ));
   }
 }
