@@ -114,13 +114,31 @@ class _HomePage2State extends State<HomePage2> {
       itemBuilder: (BuildContext context, int index) {
         return Container(
           height: parameters.cardHeight - (parameters.cardPadding * 2),
-          width: parameters.cardWidth,
-          child: Padding(
-            padding: EdgeInsets.all(parameters.cardPadding),
-            child: CardWidget(),
+          child: ListView.builder(
+            itemCount: _itemCount,
+            physics: PageScrollPhysics(),
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (BuildContext context, int index) {
+              return buildContainer(parameters);
+            },
           ),
         );
       },
+    );
+  }
+
+  Container buildContainer(CardParameters parameters) {
+    return Container(
+      height: parameters.cardHeight - (parameters.cardPadding * 2),
+      width: parameters.cardWidth,
+      child: Padding(
+        padding: EdgeInsets.all(parameters.cardPadding),
+        child: Padding(
+          padding: EdgeInsets.all(parameters.cardPadding),
+          child: CardWidget(),
+        ),
+      ),
     );
   }
 }
