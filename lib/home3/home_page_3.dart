@@ -5,11 +5,13 @@ import 'package:neumorphic_design_app/home3/size_provider2.dart';
 
 class HomePage3 extends StatefulWidget {
   final int dimensionWidth;
+  final int dimensionHeight;
   final double padding;
 
   HomePage3(
       {@required this.dimensionWidth,
-      @required this.padding});
+      @required this.padding,
+      @required this.dimensionHeight});
 
   @override
   _HomePage3State createState() => _HomePage3State();
@@ -22,7 +24,7 @@ class _HomePage3State extends State<HomePage3> {
   double _padding;
   ScrollController verticalController;
   int _dimensionWidth;
-  double _cardHeight;
+  int _dimensionHeight;
 
   final double _aspectRatio = 9/16;
 
@@ -30,8 +32,11 @@ class _HomePage3State extends State<HomePage3> {
   void initState() {
     super.initState();
     _dimensionWidth = widget.dimensionWidth;
-    _cardHeight = SizeProvider2.screenHeight * _aspectRatio;
-
+    _dimensionHeight = widget.dimensionHeight;
+    print(SizeProvider2.screenHeight * _aspectRatio);
+    print(_aspectRatio);
+    // print(_dimensionWidth/_dimensionHeight);
+_dimensionHeight = 5;
     if (widget.padding > SizeProvider2.screenWidth)
       _padding = 8;
     else
@@ -69,7 +74,7 @@ class _HomePage3State extends State<HomePage3> {
             itemCount: count,
             itemBuilder: (BuildContext context, int i) {
               return HorizontalList(
-                height: _cardHeight,
+                dimensionHeight: _dimensionHeight,
                 controller: horizontalControllers[i],
                 count: count,
                 padding: _padding,
