@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:neumorphic_design_app/home3/custom_card.dart';
-import 'package:neumorphic_design_app/home3/size_provider2.dart';
 
 class HorizontalList extends StatelessWidget {
   const HorizontalList({
@@ -10,7 +9,6 @@ class HorizontalList extends StatelessWidget {
     @required this.count,
     @required this.text,
     @required this.paddingWidth,
-    @required this.paddingHeight,
     @required this.cardWidthPixels,
   }) : super(key: key);
 
@@ -19,7 +17,6 @@ class HorizontalList extends StatelessWidget {
   final int count;
   final String text;
   final double paddingWidth;
-  final double paddingHeight;
   final double cardWidthPixels;
 
   @override
@@ -32,12 +29,7 @@ class HorizontalList extends StatelessWidget {
         itemCount: count,
         itemBuilder: (BuildContext context, int j) {
           return Container(
-            padding: EdgeInsets.fromLTRB(
-              paddingWidth,
-              paddingHeight,
-              paddingWidth,
-              paddingHeight,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: paddingWidth),
             child: CustomCard(
               width: cardWidthPixels,
               height: cardHeightPixels,

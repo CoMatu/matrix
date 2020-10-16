@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neumorphic_design_app/home3/home_page_3.dart';
 import 'package:neumorphic_design_app/home3/home_page_4.dart';
 import 'package:neumorphic_design_app/home3/page_transition.dart';
-import 'package:neumorphic_design_app/home3/size_provider2.dart';
-import 'package:neumorphic_design_app/presentation/pages/home_page.dart';
+import 'package:neumorphic_design_app/home3/sizes.dart';
 import 'package:neumorphic_design_app/presentation/pages/home_page_2.dart';
 import 'package:neumorphic_design_app/presentation/providers/size_provider.dart';
 import 'package:provider/provider.dart';
@@ -98,14 +97,14 @@ class _StartPageState extends State<StartPage> {
               ),
               RaisedButton(
                 onPressed: () {
-                  SizeProvider2().init(context);
+                  Sizes().init(context);
                   Navigator.push(
                     context,
                     PageTransition(
                       type: PageTransitionType.rightToLeft,
                       child: HomePage3(
-                        dimensionWidth: 4,
-                        padding: 4,
+                        dimensionWidth: 3,
+                        padding: 6,
                       ),
                     ),
                   );
@@ -114,7 +113,7 @@ class _StartPageState extends State<StartPage> {
               ),
               RaisedButton(
                 onPressed: () {
-                  SizeProvider2().init(context);
+                  Sizes().init(context);
                   Navigator.push(
                     context,
                     PageTransition(

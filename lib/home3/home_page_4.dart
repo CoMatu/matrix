@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:neumorphic_design_app/home3/custom_card.dart';
-import 'package:neumorphic_design_app/home3/size_provider2.dart';
+import 'package:neumorphic_design_app/home3/sizes.dart';
 
 class HomePage4 extends StatefulWidget {
   final int dimensionWidth;
@@ -34,7 +33,7 @@ class _HomePage4State extends State<HomePage4> {
     super.initState();
     _dimensionWidth = widget.dimensionWidth;
     _dimensionHeight = widget.dimensionHeight;
-    if (widget.padding > SizeProvider2.screenWidth)
+    if (widget.padding > Sizes.screenWidth)
       _padding = 8;
     else
       _padding = widget.padding;
@@ -80,15 +79,17 @@ class _HomePage4State extends State<HomePage4> {
           child: PageView.builder(
             scrollDirection: _slider ? Axis.vertical : Axis.horizontal,
             itemCount: count,
-            itemBuilder: (BuildContext context, int index) =>
-                Container(
-                  height: SizeProvider2.screenHeight / _dimensionHeight,
-                  width: SizeProvider2.screenWidth / _dimensionWidth,
-                  color: Colors.red,
-                  child: Center(
-                    child: Text('$index', style: TextStyle(fontSize: 40),),
-                  ),
+            itemBuilder: (BuildContext context, int index) => Container(
+              height: Sizes.screenHeight / _dimensionHeight,
+              width: Sizes.screenWidth / _dimensionWidth,
+              color: Colors.red,
+              child: Center(
+                child: Text(
+                  '$index',
+                  style: TextStyle(fontSize: 40),
                 ),
+              ),
+            ),
             controller: _pageController,
           ),
         ),

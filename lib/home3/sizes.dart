@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-class SizeProvider2 {
+class Sizes {
   static double screenWidth;
   static double screenHeight;
   static double blockSizeHorizontal;

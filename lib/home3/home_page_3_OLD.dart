@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter/rendering.dart';
 // import 'package:neumorphic_design_app/home3/horizontal_list.dart';
-// import 'package:neumorphic_design_app/home3/size_provider2.dart';
+// import 'package:neumorphic_design_app/home3/sizes.dart';
 //
 // class HomePage3 extends StatefulWidget {
 //   final int dimensionWidth;

@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'package:neumorphic_design_app/home3/custom_card.dart';
-// import 'package:neumorphic_design_app/home3/size_provider2.dart';
+// import 'package:neumorphic_design_app/home3/sizes.dart';
 //
 // class HorizontalList extends StatelessWidget {
 //   const HorizontalList({
