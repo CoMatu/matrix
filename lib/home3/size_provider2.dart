@@ -11,10 +11,10 @@ class SizeProvider2 {
 
   void init(BuildContext context) async {
     _mediaQueryData = MediaQuery.of(context);
+    topPadding = _mediaQueryData.padding.top;
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
-    topPadding = _mediaQueryData.padding.top;
   }
 }

@@ -5,38 +5,44 @@ import 'package:neumorphic_design_app/home3/size_provider2.dart';
 class HorizontalList extends StatelessWidget {
   const HorizontalList({
     Key key,
-    @required int dimensionHeight,
+    @required this.cardHeightPixels,
     @required this.controller,
     @required this.count,
     @required this.text,
-    @required double padding,
-    @required int dimensionWidth,
-  })  : _dimensionHeight = dimensionHeight,
-        _padding = padding,
-        _dimensionWidth = dimensionWidth,
-        super(key: key);
+    @required this.paddingWidth,
+    @required this.paddingHeight,
+    @required this.cardWidthPixels,
+  }) : super(key: key);
 
-  final int _dimensionHeight;
+  final double cardHeightPixels;
   final ScrollController controller;
   final int count;
   final String text;
-  final double _padding;
-  final int _dimensionWidth;
+  final double paddingWidth;
+  final double paddingHeight;
+  final double cardWidthPixels;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeProvider2.screenHeight / _dimensionHeight -
-          SizeProvider2.topPadding / _dimensionHeight,
+      height: cardHeightPixels,
       child: ListView.builder(
         controller: controller,
         scrollDirection: Axis.horizontal,
         itemCount: count,
         itemBuilder: (BuildContext context, int j) {
-          return CustomCard(
-            padding: _padding,
-            dimensionWidth: _dimensionWidth,
-            text: '$text $j',
+          return Container(
+            padding: EdgeInsets.fromLTRB(
+              paddingWidth,
+              paddingHeight,
+              paddingWidth,
+              paddingHeight,
+            ),
+            child: CustomCard(
+              width: cardWidthPixels,
+              height: cardHeightPixels,
+              text: '$text $j',
+            ),
           );
         },
       ),
