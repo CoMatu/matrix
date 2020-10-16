@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:neumorphic_design_app/home3/home_page_3.dart';
+import 'package:neumorphic_design_app/home3/home_page_4.dart';
+import 'package:neumorphic_design_app/home3/page_transition.dart';
+import 'package:neumorphic_design_app/home3/size_provider2.dart';
 import 'package:neumorphic_design_app/presentation/pages/home_page.dart';
 import 'package:neumorphic_design_app/presentation/pages/home_page_2.dart';
 import 'package:neumorphic_design_app/presentation/providers/size_provider.dart';
@@ -91,7 +95,40 @@ class _StartPageState extends State<StartPage> {
                 onPressed: () =>
                     pressButton(context, dimension, paddings, isLine),
                 child: Text('OK'),
-              )
+              ),
+              RaisedButton(
+                onPressed: () {
+                  SizeProvider2().init(context);
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: HomePage3(
+                        dimensionWidth: 4,
+                        padding: 4,
+                      ),
+                    ),
+                  );
+                },
+                child: Text('HomePage3'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  SizeProvider2().init(context);
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: HomePage4(
+                        dimensionWidth: 2,
+                        dimensionHeight: 5,
+                        padding: 4,
+                      ),
+                    ),
+                  );
+                },
+                child: Text('HomePage4'),
+              ),
             ],
           ),
         ),
