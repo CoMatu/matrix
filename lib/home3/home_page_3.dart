@@ -23,6 +23,7 @@ class _HomePage3State extends State<HomePage3> {
   List<double> horizontalControllersOffsets = [];
   double _paddingWidth;
   double _paddingHeight;
+  double verticalControllerOffset = 0;
   ScrollController verticalController;
   int _dimensionWidth;
 
@@ -80,48 +81,80 @@ class _HomePage3State extends State<HomePage3> {
         body: Stack(
       children: [
         (cardHeight > 4 || cardWidth > 4)
-            ? ListView.builder(
-                controller: verticalController,
-                scrollDirection: Axis.vertical,
-                itemCount: count,
-                itemBuilder: (BuildContext context, int i) {
-                  return Container(
-                    margin: EdgeInsets.symmetric(vertical: _paddingHeight),
-                    child: new NotificationListener(
-                      child: HorizontalList(
-                        cardHeightPixels: cardHeight,
-                        controller: horizontalControllers[i],
-                        count: count,
-                        paddingWidth: _paddingWidth,
-                        cardWidthPixels: cardWidth,
-                        text: '$i - ',
-                      ),
-                      onNotification: (t) {
-                        if (t is ScrollEndNotification) {
-                          double scrollModulo =
-                              horizontalControllers[i].position.pixels %
-                                  (cardWidth + _paddingWidth * 2);
-                          print(scrollModulo);
-                          if (scrollModulo != 0) {
-                            print(cardWidth / 2 < scrollModulo);
-                            // тут надо докручивать
-                            if (cardWidth / 2 < scrollModulo)
-                              horizontalControllersOffsets[i] += (cardWidth +
-                                  _paddingWidth * 2 -
-                                  scrollModulo);
-                            else
-                              horizontalControllersOffsets[i] -= scrollModulo;
-                            Future.delayed(Duration(milliseconds: 1), () {
-                              horizontalControllers[i].animateTo(
-                                  horizontalControllersOffsets[i],
-                                  curve: Curves.easeInExpo,
-                                  duration: Duration(milliseconds: 500));
-                            });
+            ? NotificationListener(
+                child: ListView.builder(
+                  controller: verticalController,
+                  scrollDirection: Axis.vertical,
+                  itemCount: count,
+                  itemBuilder: (BuildContext context, int i) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(vertical: _paddingHeight),
+                      child: NotificationListener(
+                        child: HorizontalList(
+                          cardHeightPixels: cardHeight,
+                          controller: horizontalControllers[i],
+                          count: count,
+                          paddingWidth: _paddingWidth,
+                          cardWidthPixels: cardWidth,
+                          text: '$i - ',
+                        ),
+                        // ignore: missing_return
+                        onNotification: (t) {
+                          if (t is ScrollEndNotification) {
+                            double scrollModulo =
+                                horizontalControllers[i].position.pixels %
+                                    (cardWidth + _paddingWidth * 2);
+                            print(scrollModulo);
+                            if (scrollModulo.roundToDouble() != 0) {
+                              print(cardWidth / 2 < scrollModulo);
+                              // тут надо докручивать
+                              if (cardWidth / 2 < scrollModulo)
+                                horizontalControllersOffsets[i] += (cardWidth +
+                                    _paddingWidth * 2 -
+                                    scrollModulo);
+                              else
+                                horizontalControllersOffsets[i] -= scrollModulo;
+                              Future.delayed(Duration(milliseconds: 2), () {
+                                horizontalControllers[i].animateTo(
+                                    horizontalControllersOffsets[i],
+                                    curve: Curves.easeInExpo,
+                                    duration: Duration(milliseconds: 500));
+                              });
+                            }
                           }
-                        }
-                      },
-                    ),
-                  );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                // ignore: missing_return
+                onNotification: (t) {
+                  if (t is ScrollEndNotification) {
+                    double scrollModulo = (verticalController.position.pixels +
+                            Sizes.topPadding) %
+                        (cardHeight + _paddingHeight * 2);
+                    print(scrollModulo);
+                    if (scrollModulo.roundToDouble() != 0 &&
+                        verticalController.position.pixels != 0) {
+                      if ((cardHeight / 2 + _paddingHeight) < scrollModulo)
+                        verticalControllerOffset = verticalController
+                                .position.pixels +
+                            (cardHeight + _paddingHeight * 2 - scrollModulo) +
+                            _paddingHeight +
+                            Sizes.topPadding;
+                      else
+                        verticalControllerOffset =
+                            verticalController.position.pixels -
+                                scrollModulo +
+                                _paddingHeight +
+                                Sizes.topPadding;
+                      Future.delayed(Duration(milliseconds: 3), () {
+                        verticalController.animateTo(verticalControllerOffset,
+                            curve: Curves.easeInExpo,
+                            duration: Duration(milliseconds: 500));
+                      });
+                    }
+                  }
                 },
               )
             : Center(
