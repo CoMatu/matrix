@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:neumorphic_design_app/home3/horizontal_list.dart';
@@ -27,9 +26,9 @@ class _HomePage3State extends State<HomePage3> {
   ScrollController verticalController;
   int _dimensionWidth;
 
-  final double _aspectRatio = 4 / 3;
+  // final double _aspectRatio = 4 / 3;
 
-  // final double _aspectRatio = 16 / 9;
+  final double _aspectRatio = 16 / 9;
 
   @override
   void initState() {
@@ -88,13 +87,39 @@ class _HomePage3State extends State<HomePage3> {
                 itemBuilder: (BuildContext context, int i) {
                   return Container(
                     margin: EdgeInsets.symmetric(vertical: _paddingHeight),
-                    child: HorizontalList(
-                      cardHeightPixels: cardHeight,
-                      controller: horizontalControllers[i],
-                      count: count,
-                      paddingWidth: _paddingWidth,
-                      cardWidthPixels: cardWidth,
-                      text: '$i - ',
+                    child: new NotificationListener(
+                      child: HorizontalList(
+                        cardHeightPixels: cardHeight,
+                        controller: horizontalControllers[i],
+                        count: count,
+                        paddingWidth: _paddingWidth,
+                        cardWidthPixels: cardWidth,
+                        text: '$i - ',
+                      ),
+                      onNotification: (t) {
+                        if (t is ScrollEndNotification) {
+                          double scrollModulo =
+                              horizontalControllers[i].position.pixels %
+                                  (cardWidth + _paddingWidth * 2);
+                          print(scrollModulo);
+                          if (scrollModulo != 0) {
+                            print(cardWidth / 2 < scrollModulo);
+                            // тут надо докручивать
+                            if (cardWidth / 2 < scrollModulo)
+                              horizontalControllersOffsets[i] += (cardWidth +
+                                  _paddingWidth * 2 -
+                                  scrollModulo);
+                            else
+                              horizontalControllersOffsets[i] -= scrollModulo;
+                            Future.delayed(Duration(milliseconds: 1), () {
+                              horizontalControllers[i].animateTo(
+                                  horizontalControllersOffsets[i],
+                                  curve: Curves.easeInExpo,
+                                  duration: Duration(milliseconds: 500));
+                            });
+                          }
+                        }
+                      },
                     ),
                   );
                 },

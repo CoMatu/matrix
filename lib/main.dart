@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:neumorphic_design_app/home3/home_page_3.dart';
-import 'package:neumorphic_design_app/home3/home_page_4.dart';
 import 'package:neumorphic_design_app/home3/page_transition.dart';
 import 'package:neumorphic_design_app/home3/sizes.dart';
 import 'package:neumorphic_design_app/presentation/pages/home_page_2.dart';
@@ -45,15 +44,15 @@ class _StartPageState extends State<StartPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SwitchListTile(
-                value: isLine,
-                onChanged: (bool newValue) {
-                  setState(() {
-                    isLine = newValue;
-                  });
-                },
-                title: Text('Листать одну строку'),
-              ),
+              // SwitchListTile(
+              //   value: isLine,
+              //   onChanged: (bool newValue) {
+              //     setState(() {
+              //       isLine = newValue;
+              //     });
+              //   },
+              //   title: Text('Листать одну строку'),
+              // ),
               Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Row(
@@ -80,8 +79,8 @@ class _StartPageState extends State<StartPage> {
                     Expanded(
                       child: TextField(
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                            hintText: 'Отступы от 0.01 до 0.15'),
+                        decoration:
+                            InputDecoration(hintText: 'Отступ в пикселях'),
                         onChanged: (value) {
                           paddings = double.parse(value);
                         },
@@ -90,11 +89,11 @@ class _StartPageState extends State<StartPage> {
                   ],
                 ),
               ),
-              RaisedButton(
-                onPressed: () =>
-                    pressButton(context, dimension, paddings, isLine),
-                child: Text('OK'),
-              ),
+              // RaisedButton(
+              //   onPressed: () =>
+              //       pressButton(context, dimension, paddings, isLine),
+              //   child: Text('OK'),
+              // ),
               RaisedButton(
                 onPressed: () {
                   Sizes().init(context);
@@ -103,31 +102,31 @@ class _StartPageState extends State<StartPage> {
                     PageTransition(
                       type: PageTransitionType.rightToLeft,
                       child: HomePage3(
-                        dimensionWidth: 3,
-                        padding: 6,
+                        dimensionWidth: dimension,
+                        padding: paddings,
                       ),
                     ),
                   );
                 },
-                child: Text('HomePage3'),
+                child: Text('OK'),
               ),
-              RaisedButton(
-                onPressed: () {
-                  Sizes().init(context);
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.rightToLeft,
-                      child: HomePage4(
-                        dimensionWidth: 2,
-                        dimensionHeight: 5,
-                        padding: 4,
-                      ),
-                    ),
-                  );
-                },
-                child: Text('HomePage4'),
-              ),
+              // RaisedButton(
+              //   onPressed: () {
+              //     Sizes().init(context);
+              //     Navigator.push(
+              //       context,
+              //       PageTransition(
+              //         type: PageTransitionType.rightToLeft,
+              //         child: HomePage4(
+              //           dimensionWidth: 2,
+              //           dimensionHeight: 5,
+              //           padding: 4,
+              //         ),
+              //       ),
+              //     );
+              //   },
+              //   child: Text('HomePage4'),
+              // ),
             ],
           ),
         ),
