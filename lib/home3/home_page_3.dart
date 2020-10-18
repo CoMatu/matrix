@@ -10,9 +10,10 @@ class HomePage3 extends StatefulWidget {
   final int dimensionHeight;
   final double padding;
 
-  HomePage3({@required this.dimensionWidth,
-    @required this.padding,
-    @required this.dimensionHeight});
+  HomePage3(
+      {@required this.dimensionWidth,
+      @required this.padding,
+      @required this.dimensionHeight});
 
   @override
   _HomePage3State createState() => _HomePage3State();
@@ -28,9 +29,9 @@ class _HomePage3State extends State<HomePage3> {
   ScrollController verticalController;
   int _dimensionWidth;
 
-  // final double _aspectRatio = 4 / 3;
+  final double _aspectRatio = 4 / 3;
 
-  final double _aspectRatio = 16 / 9;
+  // final double _aspectRatio = 16 / 9;
 
   @override
   void initState() {
@@ -53,6 +54,7 @@ class _HomePage3State extends State<HomePage3> {
     }
     verticalController = ScrollController();
     verticalController.addListener(() {
+      locked = true;
       setState(() {
         for (int i = 0; i < count; i++) {
           if (horizontalControllers[i].hasClients)
@@ -60,21 +62,15 @@ class _HomePage3State extends State<HomePage3> {
         }
       });
     });
-    // double screenHeightMinusTopOSBar = Sizes.screenHeight - Sizes.topPadding;
     cardWidth = (Sizes.screenWidth - _paddingWidth * _dimensionWidth * 2) /
         _dimensionWidth;
     cardHeight = cardWidth * _aspectRatio;
     _paddingHeight = _paddingWidth;
-    // double rowsPerScreen =
-    //     (screenHeightMinusTopOSBar - screenHeightMinusTopOSBar % cardHeight) /
-    //         cardHeight;
-    // // если карточек много и отступ большой то получается хрень или ошибка
-    // _paddingHeight = screenHeightMinusTopOSBar % cardHeight / rowsPerScreen / 2;
-    // print(_paddingHeight);
   }
 
   double cardWidth;
   double cardHeight;
+  bool locked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +101,7 @@ class _HomePage3State extends State<HomePage3> {
                           double scrollModulo =
                               horizontalControllers[i].position.pixels %
                                   (cardWidth + _paddingWidth * 2);
-                          print(scrollModulo);
                           if (scrollModulo.roundToDouble() != 0) {
-                            print(cardWidth / 2 < scrollModulo);
                             // тут надо докручивать
                             if (cardWidth / 2 < scrollModulo)
                               horizontalControllersOffsets[i] += (cardWidth +
@@ -120,6 +114,7 @@ class _HomePage3State extends State<HomePage3> {
                                   horizontalControllersOffsets[i],
                                   curve: Curves.easeInExpo,
                                   duration: Duration(milliseconds: 500));
+                              locked = false;
                             });
                           }
                         }
@@ -130,15 +125,15 @@ class _HomePage3State extends State<HomePage3> {
               ),
               // ignore: missing_return
               onNotification: (t) {
-                if (t is ScrollEndNotification) {
+                if (locked) {
+                  if (t is ScrollEndNotification) {
                     double carHeightWithPaddings =
                         cardHeight + _paddingHeight * 2;
                     double scrollModulo = roundDouble(
                         (verticalController.position.pixels +
-                                Sizes.topPadding) %
+                            Sizes.topPadding) %
                             carHeightWithPaddings,
                         4);
-                    print(scrollModulo.toInt());
                     if (scrollModulo.toInt() > 0 &&
                         scrollModulo.toInt() != Sizes.topPadding + 1 &&
                         scrollModulo.toInt() != Sizes.topPadding &&
@@ -147,7 +142,6 @@ class _HomePage3State extends State<HomePage3> {
                           carHeightWithPaddings -
                           scrollModulo +
                           Sizes.topPadding;
-                      // else scrollTo = 0;
                       Future.delayed(Duration(milliseconds: 3), () {
                         verticalController.animateTo(roundDouble(scrollTo, 4),
                             curve: Curves.easeInExpo,
@@ -155,7 +149,8 @@ class _HomePage3State extends State<HomePage3> {
                       });
                     }
                   }
-                },
+                }
+              },
             )
                 : Center(
               child: Text('Некорректно заданы параметры сетки',

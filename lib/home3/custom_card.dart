@@ -31,21 +31,21 @@ class CustomCard extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      margin: EdgeInsets.all(0),
+    return Container(
       child: Container(
-        child: Center(
-          child: Text(text),
+        width: width - 6,
+        height: height - 6,
+        child: Card(
+          color: Colors.indigo[200],
+          elevation: 2,
+          child: Center(
+            child: Text(text),
+          ),
         ),
-        width: width,
-        height: height,
-        color: Colors.indigo[200],
-        // color: randomColor(),
       ),
+      width: width,
+      height: height,
+      // color: randomColor(),
     );
   }
 }
