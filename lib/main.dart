@@ -34,10 +34,11 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   bool isLine = false;
 
+  int dimension;
+  double paddings;
+
   @override
   Widget build(BuildContext context) {
-    int dimension = 1;
-    double paddings = 0.03;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -64,7 +65,9 @@ class _StartPageState extends State<StartPage> {
                         decoration: InputDecoration(
                             hintText: 'Введите размерность сетки'),
                         onChanged: (value) {
-                          dimension = int.parse(value);
+                          setState(() {
+                            dimension = int.parse(value);
+                          });
                         },
                       ),
                     ),
@@ -82,7 +85,9 @@ class _StartPageState extends State<StartPage> {
                         decoration:
                             InputDecoration(hintText: 'Отступ в пикселях'),
                         onChanged: (value) {
-                          paddings = double.parse(value);
+                          setState(() {
+                            paddings = double.parse(value);
+                          });
                         },
                       ),
                     ),
