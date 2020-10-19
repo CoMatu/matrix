@@ -1,17 +1,24 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:neumorphic_design_app/scrollTypeOne/horizontal_list.dart';
+import 'package:neumorphic_design_app/scrollTypeOne/custom_scroll_physics.dart';
+import 'package:neumorphic_design_app/scrollTypeOne/horizontal_scroller.dart';
 import 'package:neumorphic_design_app/scrollTypeOne/sizes.dart';
 
 class ScrollTypeOne extends StatefulWidget {
   final int dimension;
   final double padding;
+  final double aspectRatio;
+  final int totalItemsCountHeight;
+  final int totalItemsCountWidth;
 
   ScrollTypeOne({
     @required this.dimension,
     @required this.padding,
+    @required this.aspectRatio,
+    @required this.totalItemsCountHeight,
+    @required this.totalItemsCountWidth,
   });
 
   @override
@@ -19,16 +26,20 @@ class ScrollTypeOne extends StatefulWidget {
 }
 
 class _ScrollTypeOneState extends State<ScrollTypeOne> {
-  static const int count = 1000;
-  List<ScrollController> horizontalControllers = [];
-  List<double> horizontalControllersOffsets = [];
+  int _totalItemsCountHeight = 100;
+  int _totalItemsCountWidth = 100;
+  List<PageController> _horizontalControllers = [];
+  List<int> _horizontalControllersPages = [];
   double _paddingWidth;
   double _paddingHeight;
-  double verticalControllerOffset = 0;
-  ScrollController verticalController;
-  int _dimensionWidth;
+  ScrollController _verticalController;
+  ScrollPhysics _verticalScrollPhysics;
 
-  final double _aspectRatio = 4 / 3;
+  int _dimensionWidth;
+  double _cardWidth;
+  double _cardHeight;
+
+  double _aspectRatio = 4 / 3;
 
   // final double _aspectRatio = 16 / 9;
 
@@ -36,135 +47,94 @@ class _ScrollTypeOneState extends State<ScrollTypeOne> {
   void initState() {
     super.initState();
     _dimensionWidth = widget.dimension;
+    _totalItemsCountWidth = widget.totalItemsCountWidth ~/ widget.dimension;
+    _totalItemsCountHeight = widget.totalItemsCountHeight;
+    _aspectRatio = widget.aspectRatio;
     if (widget.padding > Sizes.screenWidth)
       _paddingWidth = 8;
     else
       _paddingWidth = widget.padding;
-    for (int i = 0; i < count; i++) {
-      horizontalControllersOffsets.add(0.0);
-      ScrollController controller = ScrollController(
-          initialScrollOffset: horizontalControllersOffsets[i]);
+    for (int i = 0; i < _totalItemsCountHeight; i++) {
+      _horizontalControllersPages.add(0);
+      PageController controller = PageController();
       controller.addListener(() {
         setState(() {
-          horizontalControllersOffsets[i] = controller.offset;
+          _horizontalControllersPages[i] = controller.page.round().toInt();
         });
       });
-      horizontalControllers.add(controller);
+      _horizontalControllers.add(controller);
     }
-    verticalController = ScrollController();
-    verticalController.addListener(() {
-      locked = true;
+    _verticalController = ScrollController();
+    _verticalController.addListener(() {
       setState(() {
-        for (int i = 0; i < count; i++) {
-          if (horizontalControllers[i].hasClients)
-            horizontalControllers[i].jumpTo(horizontalControllersOffsets[i]);
+        for (int i = 0; i < _totalItemsCountHeight; i++) {
+          if (_horizontalControllers[i].hasClients)
+            _horizontalControllers[i]
+                .jumpToPage(_horizontalControllersPages[i]);
         }
-        verticalControllerOffset = verticalController.offset;
       });
     });
-    cardWidth = (Sizes.screenWidth - _paddingWidth * _dimensionWidth * 2) /
+    _cardWidth = (Sizes.screenWidth - _paddingWidth * _dimensionWidth * 2) /
         _dimensionWidth;
-    cardHeight = cardWidth * _aspectRatio;
+    _cardHeight = _cardWidth * _aspectRatio;
     _paddingHeight = _paddingWidth;
+
+    double rows = ((Sizes.screenHeight -
+                Sizes.topPadding -
+                (Sizes.screenHeight - Sizes.topPadding) % _cardHeight) /
+            _cardHeight)
+        .roundToDouble();
+    int totalPagesCount = _totalItemsCountHeight ~/ rows;
+    _dimension = rows * _cardHeight;
+    pages = List.generate(totalPagesCount, (index) => index);
+    _verticalScrollPhysics = CustomScrollPhysics(itemDimension: _dimension);
   }
 
-  double cardWidth;
-  double cardHeight;
-  bool locked = false;
+  double _dimension;
+  List<int> pages;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        (cardHeight > 4 || cardWidth > 4)
-            ? NotificationListener(
-                child: ListView.builder(
-                  controller: verticalController,
+      body: Stack(
+        children: [
+          (_cardHeight > 4 || _cardWidth > 4)
+              ? ListView.builder(
+                  controller: _verticalController,
+                  physics: _verticalScrollPhysics,
                   scrollDirection: Axis.vertical,
-                  itemCount: count,
+                  itemCount: _totalItemsCountHeight,
                   itemBuilder: (BuildContext context, int i) {
-                    return Container(
-                      margin: EdgeInsets.symmetric(vertical: _paddingHeight),
-                      child: NotificationListener(
-                        child: HorizontalList(
-                          cardHeightPixels: cardHeight,
-                          controller: horizontalControllers[i],
-                          count: count,
-                          paddingWidth: _paddingWidth,
-                          cardWidthPixels: cardWidth,
-                          text: '$i - ',
-                        ),
-                        // ignore: missing_return
-                        onNotification: (t) {
-                          if (t is ScrollEndNotification) {
-                            double scrollModulo =
-                                horizontalControllers[i].position.pixels %
-                                    (cardWidth + _paddingWidth * 2);
-                            if (scrollModulo.roundToDouble() != 0) {
-                              // тут надо докручивать
-                              if (cardWidth / 2 < scrollModulo)
-                                horizontalControllersOffsets[i] += (cardWidth +
-                                    _paddingWidth * 2 -
-                                    scrollModulo);
-                              else
-                                horizontalControllersOffsets[i] -= scrollModulo;
-                              Future.delayed(Duration(milliseconds: 2), () {
-                                horizontalControllers[i].animateTo(
-                                    horizontalControllersOffsets[i],
-                                    curve: Curves.easeInExpo,
-                                    duration: Duration(milliseconds: 350));
-                                locked = false;
-                              });
-                            }
-                          }
-                        },
-                      ),
-                    );
+                    return HorizontalScroller(
+                        cardHeight: _cardHeight,
+                        horizontalController: _horizontalControllers[i],
+                        count: _totalItemsCountWidth,
+                        dimensionWidth: _dimensionWidth,
+                        paddingWidth: _paddingWidth,
+                        paddingHeight: _paddingHeight,
+                        cardWidth: _cardWidth,
+                        rowIndex: i);
                   },
+                )
+              : Center(
+                  child: Text('Некорректно заданы параметры сетки',
+                      textAlign: TextAlign.center),
                 ),
-                // ignore: missing_return
-                onNotification: (t) {
-                  if (locked) {
-                    if (t is ScrollEndNotification) {
-                      double scrollModulo = verticalController.position.pixels %
-                          (cardHeight + _paddingHeight * 2);
-                      if (scrollModulo.roundToDouble() != 0) {
-                        // тут надо докручивать
-                        if (cardHeight / 2 < scrollModulo)
-                          verticalControllerOffset +=
-                              (cardHeight + _paddingHeight * 2 - scrollModulo);
-                        else
-                          verticalControllerOffset -= scrollModulo;
-                        Future.delayed(Duration(milliseconds: 2), () {
-                          verticalController.animateTo(verticalControllerOffset,
-                              curve: Curves.easeInExpo,
-                              duration: Duration(milliseconds: 350));
-                          locked = false;
-                        });
-                      }
-                    }
-                  }
-                },
-              )
-            : Center(
-                child: Text('Некорректно заданы параметры сетки',
-                    textAlign: TextAlign.center),
-              ),
-        Container(
-          width: _paddingWidth * 3,
-          child: GestureDetector(
-            onHorizontalDragEnd: (dragStartDetals) {
-              Navigator.pop(context);
-            },
+          Container(
+            width: 26,
+            child: GestureDetector(
+              onHorizontalDragEnd: (dragStartDetals) {
+                Navigator.pop(context);
+              },
+            ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   double roundDouble(double value, int places) {
-    double mod = pow(10.0, places);
+    double mod = math.pow(10.0, places);
     return ((value * mod).round().toDouble() / mod);
   }
 }

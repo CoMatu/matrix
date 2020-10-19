@@ -1,51 +1,50 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
   const CustomCard({
     Key key,
-    @required this.width,
-    @required this.height,
+    @required double paddingWidth,
+    @required double paddingHeight,
+    @required this.cardWidth,
+    @required this.cardHeight,
     @required this.text,
-  }) : super(key: key);
+  })  : _paddingWidth = paddingWidth,
+        _paddingHeight = paddingHeight,
+        super(key: key);
 
-  final double width;
-  final double height;
+  final double _paddingWidth;
+  final double _paddingHeight;
+  final double cardWidth;
+  final double cardHeight;
   final String text;
-  Color randomColor() {
-    int r = Random().nextInt(10);
-    switch (r) {
-      case 0: return Colors.red;
-      case 1: return Colors.green;
-      case 2: return Colors.blue;
-      case 3: return Colors.orange;
-      case 4: return Colors.black;
-      case 5: return Colors.indigo;
-      case 6: return Colors.grey;
-      case 7: return Colors.brown;
-      case 8: return Colors.cyanAccent;
-      case 9: return Colors.pink;
-      case 10: return Colors.yellowAccent;
-    }
-  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: _paddingWidth, vertical: _paddingHeight),
       child: Container(
-        width: width - 6,
-        height: height - 6,
-        child: Card(
+        width: cardWidth,
+        height: cardHeight,
+        decoration: BoxDecoration(
           color: Colors.indigo[200],
-          elevation: 2,
-          child: Center(
-            child: Text(text),
-          ),
+          borderRadius: BorderRadius.all(
+              Radius.circular(_paddingHeight * _paddingWidth / 7)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: Offset(2, 2), // changes position of shadow
+            ),
+          ],
         ),
+        child: Center(
+            child: Text(
+          text,
+          textAlign: TextAlign.center,
+        )),
       ),
-      width: width,
-      height: height,
-      // color: randomColor(),
     );
   }
 }

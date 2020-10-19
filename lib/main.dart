@@ -34,8 +34,8 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   bool isLine = false;
 
-  int dimension = 5;
-  double paddings = 5;
+  int dimension = 3;
+  double paddings = 7;
 
   @override
   Widget build(BuildContext context) {
@@ -109,12 +109,31 @@ class _StartPageState extends State<StartPage> {
                       child: ScrollTypeOne(
                         dimension: dimension,
                         padding: paddings,
+                        totalItemsCountHeight: 100,
+                        totalItemsCountWidth: 100,
+                        aspectRatio: 16 / 9,
                       ),
                     ),
                   );
                 },
                 child: Text('OK'),
               ),
+              // RaisedButton(
+              //   onPressed: () {
+              //     Sizes().init(context);
+              //     Navigator.push(
+              //       context,
+              //       PageTransition(
+              //         type: PageTransitionType.rightToLeft,
+              //         child: ScrollTypeTwo(
+              //           dimension: dimension,
+              //           padding: paddings,
+              //         ),
+              //       ),
+              //     );
+              //   },
+              //   child: Text('OK2'),
+              // ),
               // RaisedButton(
               //   onPressed: () {
               //     Sizes().init(context);
