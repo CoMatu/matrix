@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:neumorphic_design_app/home3/home_page_3.dart';
-import 'package:neumorphic_design_app/home3/page_transition.dart';
-import 'package:neumorphic_design_app/home3/sizes.dart';
 import 'package:neumorphic_design_app/presentation/pages/home_page_2.dart';
 import 'package:neumorphic_design_app/presentation/providers/size_provider.dart';
+import 'package:neumorphic_design_app/scrollTypeOne/page_transition.dart';
+import 'package:neumorphic_design_app/scrollTypeOne/scroll_type_one.dart';
+import 'package:neumorphic_design_app/scrollTypeOne/sizes.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -34,8 +34,8 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   bool isLine = false;
 
-  int dimension;
-  double paddings;
+  int dimension = 5;
+  double paddings = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -106,8 +106,8 @@ class _StartPageState extends State<StartPage> {
                     context,
                     PageTransition(
                       type: PageTransitionType.rightToLeft,
-                      child: HomePage3(
-                        dimensionWidth: dimension,
+                      child: ScrollTypeOne(
+                        dimension: dimension,
                         padding: paddings,
                       ),
                     ),

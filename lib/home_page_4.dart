@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:neumorphic_design_app/home3/sizes.dart';
+import 'package:neumorphic_design_app/scrollTypeOne/sizes.dart';
 
 class HomePage4 extends StatefulWidget {
   final int dimensionWidth;
